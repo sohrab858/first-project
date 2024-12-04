@@ -1,18 +1,15 @@
-import React from 'react'
+
 import { useState } from 'react'
-import ContactsList from "./ContactsList.jsk"
-const input = [
-    {type:"text",name:"name" , placeholder:"Name"}
-    {type:"text",name:"lastName" , placeholder:"Last Name"}
-    {type:"email",name:"email" , placeholder:"Email"}
-    {type:"number",name:"phoneNumber" , placeholder:"phoneNumber"}
+import Lists from './Lists'
+  import { v4 } from 'uuid'
+import inputs from "../contacts/inputs"
 
 
-]
 function Contact() {
-    const [contacts,setContants] = useState([])
+    const [contacts,setContacts] = useState([])
     const [alert,setAlert] = useState("")
     const[contact,setContact]=useState({
+      id:"",
         name : "",
         lastName: "",
         email: "",
@@ -33,31 +30,42 @@ setContact((contact) => ({...contact ,[name]:value}))
     return
         }
          setAlert("") ;
-            setContants((contacts) => ([...contacts , contact])) ;
+         const newContact = {...contact , id:v4()}
+         setContacts((contacts) => ([...contacts , newContact])) ;
             setContact({
                 name : "",
                 lastName: "",
                 email: "",
                 phoneNumber: ""
             })
-    
-    
+    }
+    const deleteHandler = (id) => {
+const newContact = contacts.filter((contact) => contact.id !== id)
+setContact(newContact);
     }
 
   return (
     <div> 
       <div>
-      {inputs.map(input) =>(<input type={input.type} placeholder='{input.placehod' value={input.value name={input.name}/>)}
-        <input type='text' placeholder='Name' name='name' value={contact.name}  onChange={changeHandler}/>
-        <input type='text' placeholder='Last Name' name='lastName' value={contact.lastName} onChange={changeHandler} />
-        <input type='email' placeholder='Email' name='email' value={contact.email}  onChange={changeHandler}/>
-        <input type='number' placeholder='Phone Number' name='phoneNumber' value={contact.phoneNumber} onChange={changeHandler} />
+      {
+        inputs.map((input, index) =>(
+        <input
+        key={index}
+         type={input.type} 
+        placeholder={input.placeholder} 
+        name={input.name} 
+        value={contact[input.name]}
+         onChange={changeHandler} 
+          
+         />))
+        }
+  
         <button onClick={addHandler}>Add contact</button>
       </div>
       <div>
         {alert && <p>{alert}</p>}
       </div>
-      <ContactsList contact={contacts}></ContactsList>
+      <Lists contacts={contacts} deleteHandler = {deleteHandler}></Lists>
     </div>
   )
 }

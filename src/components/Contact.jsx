@@ -4,7 +4,7 @@ import Lists from './Lists'
   import { v4 } from 'uuid'
 import inputs from "../contacts/inputs"
 
-
+import styles from "./Contacts.module.css"
 function Contact() {
     const [contacts,setContacts] = useState([])
     const [alert,setAlert] = useState("")
@@ -25,7 +25,11 @@ setContact((contact) => ({...contact ,[name]:value}))
     }
  
     const addHandler = () => {
-    if(!contact.name || !contact.lastName || !contact.phoneNumber || !contact.email) {
+    if(
+      !contact.name ||
+       !contact.lastName ||
+        !contact.phoneNumber ||
+         !contact.email) {
         setAlert("Please fill all fields") ;
     return
         }
@@ -41,28 +45,27 @@ setContact((contact) => ({...contact ,[name]:value}))
     }
     const deleteHandler = (id) => {
 const newContact = contacts.filter((contact) => contact.id !== id)
-setContact(newContact);
+setContacts(newContact);
     }
 
   return (
-    <div> 
-      <div>
+    <div className={styles.container}> 
+      <div className={styles.form}>
       {
         inputs.map((input, index) =>(
         <input
         key={index}
-         type={input.type} 
+        type={input.type} 
         placeholder={input.placeholder} 
         name={input.name} 
         value={contact[input.name]}
-         onChange={changeHandler} 
-          
+        onChange={changeHandler} 
+        
          />))
         }
-  
         <button onClick={addHandler}>Add contact</button>
       </div>
-      <div>
+      <div className={styles.alert}>
         {alert && <p>{alert}</p>}
       </div>
       <Lists contacts={contacts} deleteHandler = {deleteHandler}></Lists>
